@@ -95,6 +95,10 @@ class CalculatorTests: XCTestCase {
     func test_returnsError_whenBothOperandsAreEmpty() {
         expect(nil, for: "-")
     }
+
+    func test_zeroMinusZeroEqualZero() {
+        expect("0", for: "0-0")
+    }
 }
 
 extension CalculatorTests {
