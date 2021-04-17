@@ -9,19 +9,17 @@ import XCTest
 @testable import Calculator
 
 class Calculator {
-    func calculate(_ input: String) -> String? {
-        let chars = Array(input)
+    func calculate(_ symbols: [Symbol]) -> String? {
         var operation: Operation?
         var operands: [Int?] = [nil, nil]
         var operandIndex = 0
 
-        for char in chars {
-            if let parcedOperation = Operation(character: char) {
+        for symbol in symbols {
+            if let parcedOperation = Operation(symbol: symbol) {
                 operation = parcedOperation
                 operandIndex = 1
             } else {
-                let digit = Int(String(char))!
-                operands[operandIndex] = (operands[operandIndex] ?? 0) * 10 + digit
+                operands[operandIndex] = (operands[operandIndex] ?? 0) * 10 + symbol.rawValue
             }
         }
 
@@ -39,6 +37,21 @@ class Calculator {
 }
 
 extension Calculator {
+    enum Symbol: Int {
+        case _0
+        case _1
+        case _2
+        case _3
+        case _4
+        case _5
+        case _6
+        case _7
+        case _8
+        case _9
+        case plus
+        case minus
+    }
+
     private enum Operation {
         case plus
         case minus
@@ -52,11 +65,11 @@ extension Calculator {
             }
         }
 
-        init?(character: Character) {
-            switch character {
-            case "+":
+        init?(symbol: Symbol) {
+            switch symbol {
+            case .plus:
                 self = .plus
-            case "-":
+            case .minus:
                 self = .minus
             default:
                 return nil
@@ -117,7 +130,38 @@ extension CalculatorTests {
     ) {
         let sut = Calculator()
 
-        let result = sut.calculate(input)
+        let symbols: [Calculator.Symbol] = input.map {
+            switch $0 {
+            case "0":
+                return ._0
+            case "1":
+                return ._1
+            case "2":
+                return ._2
+            case "3":
+                return ._3
+            case "4":
+                return ._4
+            case "5":
+                return ._5
+            case "6":
+                return ._6
+            case "7":
+                return ._7
+            case "8":
+                return ._8
+            case "9":
+                return ._9
+            case "+":
+                return .plus
+            case "-":
+                return .minus
+            default:
+                preconditionFailure("Unsupported symbol \($0)")
+            }
+        }
+
+        let result = sut.calculate(symbols)
 
         XCTAssertEqual(
             result,
