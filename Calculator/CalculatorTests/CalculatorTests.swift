@@ -12,7 +12,7 @@ class Calculator {
     func calculate(_ input: String) -> String? {
         let chars = Array(input)
         var operation: Operation?
-        var operands = [0, 0]
+        var operands: [Int?] = [nil, nil]
         var operandIndex = 0
 
         for char in chars {
@@ -21,12 +21,14 @@ class Calculator {
                 operandIndex = 1
             } else {
                 let digit = Int(String(char))!
-                operands[operandIndex] = operands[operandIndex] * 10 + digit
+                operands[operandIndex] = (operands[operandIndex] ?? 0) * 10 + digit
             }
         }
 
-        if let operation = operation {
-            let result = operation.function(operands[0], operands[1])
+        if let operation = operation,
+           let operand1 = operands[0],
+           let operand2 = operands[1] {
+            let result = operation.function(operand1, operand2)
             return "\(result)"
         } else {
             return nil
@@ -80,6 +82,14 @@ class CalculatorTests: XCTestCase {
 
     func test_substractionOfTwoIntegers() {
         expect("-3", for: "12-15")
+    }
+
+    func test_returnsError_whenFirstOperandIsEmpty() {
+        expect(nil, for: "+34")
+    }
+
+    func test_returnsError_whenSecondOperandIsEmpty() {
+        expect(nil, for: "35+")
     }
 }
 
