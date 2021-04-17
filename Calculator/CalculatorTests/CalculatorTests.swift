@@ -30,6 +30,8 @@ class Calculator {
            let operand2 = operands[1] {
             let result = operation.function(operand1, operand2)
             return "\(result)"
+        } else if let operand1 = operands[0], operation == nil {
+            return "\(operand1)"
         } else {
             return nil
         }
@@ -98,6 +100,11 @@ class CalculatorTests: XCTestCase {
 
     func test_zeroMinusZeroEqualZero() {
         expect("0", for: "0-0")
+    }
+
+    func test_expectSameInteger_forIntegerInput() {
+        expect("123", for: "123")
+        expect("0", for: "0")
     }
 }
 
