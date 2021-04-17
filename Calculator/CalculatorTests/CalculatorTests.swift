@@ -10,14 +10,14 @@ import XCTest
 
 class Calculator {
     func calculate(_ input: String) -> String? {
-        let chars = Array(input)
-        guard chars.count == 3 else {
+        let components = input.components(separatedBy: "+")
+        guard components.count == 2 else {
             return nil
         }
 
-        let digit1 = Int(String(chars[0]))!
-        let digit2 = Int(String(chars[2]))!
-        let result = digit1 + digit2
+        let x1 = Int(components[0])!
+        let x2 = Int(components[1])!
+        let result = x1 + x2
 
         return "\(result)"
     }
@@ -30,6 +30,10 @@ class CalculatorTests: XCTestCase {
 
     func test_sumOfTwoDigits() {
         expect("3", for: "1+2")
+    }
+
+    func test_sumOfTwoIntegers() {
+        expect("9999", for: "123+9876")
     }
 }
 
