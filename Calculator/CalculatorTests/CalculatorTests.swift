@@ -10,18 +10,60 @@ import XCTest
 
 class Calculator {
     func calculate(_ input: String) -> String? {
-        let components = input.components(separatedBy: "+")
-        guard components.count == 2 else {
-            return nil
+        let chars = Array(input)
+        var operation: Operation?
+        var operands = [0, 0]
+        var operandIndex = 0
+
+        for char in chars {
+            if let parcedOperation = Operation(character: char) {
+                operation = parcedOperation
+                operandIndex = 1
+            } else {
+                let digit = Int(String(char))!
+                operands[operandIndex] = operands[operandIndex] * 10 + digit
+            }
         }
 
-        let x1 = Int(components[0])!
-        let x2 = Int(components[1])!
-        let result = x1 + x2
-
-        return "\(result)"
+        if let operation = operation {
+            let result = operation.function(operands[0], operands[1])
+            return "\(result)"
+        } else {
+            return nil
+        }
     }
 }
+
+extension Calculator {
+    private enum Operation {
+        case plus
+        case minus
+
+        var function: (Int, Int) -> Int {
+            switch self {
+            case .plus:
+                return { $0 + $1 }
+            case .minus:
+                return { $0 - $1 }
+            }
+        }
+
+        init?(character: Character) {
+            switch character {
+            case "+":
+                self = .plus
+            case "-":
+                self = .minus
+            default:
+                return nil
+            }
+        }
+    }
+}
+
+
+
+
 
 class CalculatorTests: XCTestCase {
     func test_returnsError_forEmptyInput() {
@@ -34,6 +76,10 @@ class CalculatorTests: XCTestCase {
 
     func test_sumOfTwoIntegers() {
         expect("9999", for: "123+9876")
+    }
+
+    func test_substractionOfTwoIntegers() {
+        expect("-3", for: "12-15")
     }
 }
 
