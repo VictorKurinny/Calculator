@@ -15,8 +15,8 @@ class Calculator {
         var operandIndex = 0
 
         for symbol in symbols {
-            if let parcedOperation = Operation(symbol: symbol) {
-                operation = parcedOperation
+            if let parsedOperation = Operation(symbol: symbol) {
+                operation = parsedOperation
                 operandIndex = 1
             } else {
                 operands[operandIndex] = (operands[operandIndex] ?? 0) * 10 + symbol.rawValue
@@ -95,7 +95,7 @@ class CalculatorTests: XCTestCase {
         expect("9999", for: "123+9876")
     }
 
-    func test_substractionOfTwoIntegers() {
+    func test_subtractionOfTwoIntegers() {
         expect("-3", for: "12-15")
     }
 
