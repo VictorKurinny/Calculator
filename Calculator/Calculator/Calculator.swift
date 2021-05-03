@@ -46,8 +46,7 @@ public class Calculator {
             return nil
         }
 
-        if integersStack.count == 1,
-           let result = integersStack.first {
+        if let result = integersStack.first {
             return "\(result)"
         } else {
             return nil
