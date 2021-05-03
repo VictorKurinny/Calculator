@@ -49,6 +49,17 @@ class CalculatorTests: XCTestCase {
     func test_multiplicationOfTwoIntegers() {
         expect("36", for: "3*12")
     }
+
+    func test_threeOperands() {
+        expect("7", for: "1+2*3")
+        expect("5", for: "1*2+3")
+        expect("6", for: "1+2+3")
+        expect("-4", for: "1-2-3")
+        expect("0", for: "1+2-3")
+        expect("2", for: "1-2+3")
+        expect("2", for: "1-2+3")
+        expect("6", for: "1*2*3")
+    }
 }
 
 extension CalculatorTests {

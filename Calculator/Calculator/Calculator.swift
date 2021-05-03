@@ -11,26 +11,44 @@ public class Calculator {
     public init() {}
 
     public func calculate(_ symbols: [Symbol]) -> String? {
-        var operation: Operation?
-        var operands: [Int?] = [nil, nil]
-        var operandIndex = 0
+        let elements = parse(symbols: symbols)
+        var integersStack = [Int]()
+        var operationsStack = [Operation]()
 
-        for symbol in symbols {
-            if let parsedOperation = Operation(symbol: symbol) {
-                operation = parsedOperation
-                operandIndex = 1
-            } else {
-                operands[operandIndex] = (operands[operandIndex] ?? 0) * 10 + symbol.rawValue
+        let popOperations = { (priority: Int) -> Bool in
+            while let operation = operationsStack.last,
+                  operation.priority >= priority {
+                operationsStack.removeLast()
+                if let operand2 = integersStack.popLast(),
+                   let operand1 = integersStack.popLast() {
+                    let result = operation.function(operand1, operand2)
+                    integersStack.append(result)
+                } else {
+                    return false
+                }
+            }
+            return true
+        }
+
+        for element in elements {
+            switch element {
+            case let .integer(value):
+                integersStack.append(value)
+            case let .operation(operation):
+                if !popOperations(operation.priority) {
+                    return nil
+                }
+                operationsStack.append(operation)
             }
         }
 
-        if let operation = operation,
-           let operand1 = operands[0],
-           let operand2 = operands[1] {
-            let result = operation.function(operand1, operand2)
+        if !popOperations(0) {
+            return nil
+        }
+
+        if integersStack.count == 1,
+           let result = integersStack.first {
             return "\(result)"
-        } else if let operand1 = operands[0], operation == nil {
-            return "\(operand1)"
         } else {
             return nil
         }
@@ -70,6 +88,15 @@ extension Calculator {
             }
         }
 
+        var priority: Int {
+            switch self {
+            case .plus, .minus:
+                return 1
+            case .multiply:
+                return 2
+            }
+        }
+
         init?(symbol: Symbol) {
             switch symbol {
             case .plus:
@@ -82,5 +109,33 @@ extension Calculator {
                 return nil
             }
         }
+    }
+
+    private enum InputElement {
+        case integer(Int)
+        case operation(Operation)
+    }
+}
+
+extension Calculator {
+    private func parse(symbols: [Symbol]) -> [InputElement] {
+        var result = [InputElement]()
+
+        for symbol in symbols {
+            if let operation = Operation(symbol: symbol) {
+                result.append(.operation(operation))
+            } else {
+                let digit = symbol.rawValue
+
+                if case let .integer(value) = result.last {
+                    result.removeLast()
+                    result.append(.integer(digit + value * 10))
+                } else {
+                    result.append(.integer(digit))
+                }
+            }
+        }
+
+        return result
     }
 }
