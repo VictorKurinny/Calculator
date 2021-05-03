@@ -57,8 +57,9 @@ class CalculatorTests: XCTestCase {
         expect("-4", for: "1-2-3")
         expect("0", for: "1+2-3")
         expect("2", for: "1-2+3")
-        expect("2", for: "1-2+3")
+        expect("-1", for: "1*2-3")
         expect("6", for: "1*2*3")
+        expect("-5", for: "1-2*3")
     }
 }
 
