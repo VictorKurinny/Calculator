@@ -9,7 +9,7 @@ import Foundation
 
 public class Calculator {
     public init() {}
-    
+
     public func calculate(_ symbols: [Symbol]) -> String? {
         var operation: Operation?
         var operands: [Int?] = [nil, nil]
@@ -51,11 +51,13 @@ extension Calculator {
         case _9
         case plus
         case minus
+        case multiply
     }
 
     private enum Operation {
         case plus
         case minus
+        case multiply
 
         var function: (Int, Int) -> Int {
             switch self {
@@ -63,6 +65,8 @@ extension Calculator {
                 return { $0 + $1 }
             case .minus:
                 return { $0 - $1 }
+            case .multiply:
+                return { $0 * $1 }
             }
         }
 
@@ -72,6 +76,8 @@ extension Calculator {
                 self = .plus
             case .minus:
                 self = .minus
+            case .multiply:
+                self = .multiply
             default:
                 return nil
             }

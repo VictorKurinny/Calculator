@@ -45,6 +45,10 @@ class CalculatorTests: XCTestCase {
         expect("123", for: "123")
         expect("0", for: "0")
     }
+
+    func test_multiplicationOfTwoIntegers() {
+        expect("36", for: "3*12")
+    }
 }
 
 extension CalculatorTests {
@@ -82,6 +86,8 @@ extension CalculatorTests {
                 return .plus
             case "-":
                 return .minus
+            case "*":
+                return .multiply
             default:
                 preconditionFailure("Unsupported symbol \($0)")
             }
